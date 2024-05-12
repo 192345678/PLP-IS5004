@@ -3,6 +3,7 @@ import requests
 import datetime
 import pandas as pd
 import xml.etree.ElementTree as ET
+from bs4 import BeautifulSoup  # 导入BeautifulSoup库
 
 import os
 import logging
@@ -22,7 +23,11 @@ def parse_rss_feed(the_url):
     # 提取数据并添加到相应列表
     for article in articles_collection:
         titles.append(article.find("title").text.strip())
-        descriptions.append(article.find("description").text.strip())
+        description_html = article.find("description").text.strip()
+        # 使用BeautifulSoup去除HTML标签
+        soup = BeautifulSoup(description_html, 'html.parser')
+        description_text = soup.get_text()
+        descriptions.append(description_text)
         links.append(article.find("link").text.strip())
         pub_date_str = article.find("pubDate").text.strip()
         # 使用正确的日期时间格式来解析字符串
@@ -39,7 +44,6 @@ def parse_rss_feed(the_url):
     df['Published Date'] = pd.to_datetime(df['Published Date'])
     df_subset = df[df['Published Date'].dt.date == (datetime.date.today() - datetime.timedelta(days=1))]
     return df_subset
-
 
 
 # 定义解析RSS源的另一个函数
