@@ -58,7 +58,7 @@ put the model into project folder
 ### 1.3 Starting the Web Application
 
 Run:
-`streamlit run '.\Main.py'`
+`streamlit run '.\Home.py'`
 
 ---
 ## SECTION 6 : PROJECT REPORT / PAPER
